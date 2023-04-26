@@ -15,6 +15,7 @@ import com.example.shop.contants.Urls;
 import com.example.shop.dto.category.CategoryItemDTO;
 import com.example.shop.service.CategoryNetwork;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,6 +41,7 @@ public class MainActivity extends BaseActivity {
         rcvCategories.setHasFixedSize(true);
         rcvCategories.setLayoutManager(new GridLayoutManager(this, 2,
                 LinearLayoutManager.VERTICAL, false));
+        rcvCategories.setAdapter(new CategoriesAdapter(new ArrayList<>()));
         requestServer();
     }
 
@@ -52,8 +54,10 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<List<CategoryItemDTO>> call, Response<List<CategoryItemDTO>> response) {
                         List<CategoryItemDTO> data = response.body();
-                        categoriesAdapter = new CategoriesAdapter(data);
-                        rcvCategories.setAdapter(categoriesAdapter);
+                        if(response.isSuccessful() && data!=null) {
+                            categoriesAdapter = new CategoriesAdapter(data);
+                            rcvCategories.setAdapter(categoriesAdapter);
+                        }
                         //CategoryItemDTO cat = data.get(0);
                     }
 
