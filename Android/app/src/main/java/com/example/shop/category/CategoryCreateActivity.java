@@ -49,6 +49,7 @@ public class CategoryCreateActivity extends BaseActivity {
         txtCategoryName = findViewById(R.id.txtCategoryName);
         txtCategoryPriority = findViewById(R.id.txtCategoryPriority);
         txtCategoryDescription = findViewById(R.id.txtCategoryDescription);
+
         txtFieldCategoryName = findViewById(R.id.txtFieldCategoryName);
 
         addEventChangeInput(txtCategoryName);
