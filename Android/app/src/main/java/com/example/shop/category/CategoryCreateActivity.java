@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import com.example.shop.R;
 import com.example.shop.dto.category.CategoryCreateDTO;
 import com.example.shop.service.CategoryNetwork;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +38,8 @@ public class CategoryCreateActivity extends BaseActivity {
     TextInputEditText txtCategoryPriority;
     TextInputEditText txtCategoryDescription;
 
+    private TextInputLayout txtFieldCategoryName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +49,16 @@ public class CategoryCreateActivity extends BaseActivity {
         txtCategoryName = findViewById(R.id.txtCategoryName);
         txtCategoryPriority = findViewById(R.id.txtCategoryPriority);
         txtCategoryDescription = findViewById(R.id.txtCategoryDescription);
+        txtFieldCategoryName = findViewById(R.id.txtFieldCategoryName);
+
+        addEventChangeInput(txtCategoryName);
+
     }
 
     public void handleCreateCategoryClick(View view) {
+        if(!validation()) {
+            return;
+        }
         CategoryCreateDTO model = new CategoryCreateDTO();
         model.setName(txtCategoryName.getText().toString());
         int number = Integer.parseInt(txtCategoryPriority.getText().toString());
@@ -70,6 +82,36 @@ public class CategoryCreateActivity extends BaseActivity {
 
                     }
                 });
+    }
+
+    private void addEventChangeInput(TextInputEditText input) {
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                validation();
+            }
+        });
+    }
+    private boolean validation() {
+        boolean isValid=true;
+        if(txtCategoryName.getText().toString().isEmpty()) {
+            txtFieldCategoryName.setError("Вкажіть назву");
+            isValid=false;
+        }
+        else {
+            txtFieldCategoryName.setError("");
+        }
+        return isValid;
     }
     private String uriGetBase64(Uri uri) {
         try {
