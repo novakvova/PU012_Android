@@ -14,6 +14,7 @@ import com.example.shop.category.CategoriesAdapter;
 import com.example.shop.contants.Urls;
 import com.example.shop.dto.category.CategoryItemDTO;
 import com.example.shop.service.CategoryNetwork;
+import com.example.shop.utils.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void requestServer() {
+        CommonUtils.showLoading();
         CategoryNetwork
                 .getInstance()
                 .getJsonApi()
@@ -58,12 +60,13 @@ public class MainActivity extends BaseActivity {
                             categoriesAdapter = new CategoriesAdapter(data);
                             rcvCategories.setAdapter(categoriesAdapter);
                         }
+                        CommonUtils.hideLoading();
                         //CategoryItemDTO cat = data.get(0);
                     }
 
                     @Override
                     public void onFailure(Call<List<CategoryItemDTO>> call, Throwable t) {
-
+                        CommonUtils.hideLoading();
                     }
                 });
     }

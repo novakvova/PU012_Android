@@ -12,6 +12,8 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.shop.BaseActivity;
 import com.example.shop.ChangeImageActivity;
@@ -19,6 +21,7 @@ import com.example.shop.MainActivity;
 import com.example.shop.R;
 import com.example.shop.dto.category.CategoryCreateDTO;
 import com.example.shop.service.CategoryNetwork;
+import com.example.shop.utils.CommonUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -34,16 +37,21 @@ public class CategoryCreateActivity extends BaseActivity {
     int SELECT_CROPPER = 300;
     Uri uri = null;
     ImageView IVPreviewImage;
+    TextView textImageError;
+
     TextInputEditText txtCategoryName;
     TextInputEditText txtCategoryPriority;
     TextInputEditText txtCategoryDescription;
 
     private TextInputLayout txtFieldCategoryName;
+    private TextInputLayout txtFieldCategoryPriority;
+    private TextInputLayout txtFieldCategoryDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_create);
+        textImageError = findViewById(R.id.textImageError);
 
         IVPreviewImage = findViewById(R.id.IVPreviewImage);
         txtCategoryName = findViewById(R.id.txtCategoryName);
@@ -51,13 +59,95 @@ public class CategoryCreateActivity extends BaseActivity {
         txtCategoryDescription = findViewById(R.id.txtCategoryDescription);
 
         txtFieldCategoryName = findViewById(R.id.txtFieldCategoryName);
+        txtFieldCategoryPriority = findViewById(R.id.txtFieldCategoryPriority);
+        txtFieldCategoryDescription = findViewById(R.id.txtFieldCategoryDescription);
 
-        addEventChangeInput(txtCategoryName);
+        setupError();
 
+    }
+
+    private void setupError() {
+
+        txtFieldCategoryName.getEditText().addTextChangedListener(new TextWatcher() {
+            // ...
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                if (text.length() >= 0 && text.length() <= 2) {
+                    txtFieldCategoryName.setError(getString(R.string.category_name_required));
+                    txtFieldCategoryName.setErrorEnabled(true);
+                } else {
+                    txtFieldCategoryName.setErrorEnabled(false);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        txtFieldCategoryPriority.getEditText().addTextChangedListener(new TextWatcher() {
+            // ...
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                int number=0;
+                try {
+                    number = Integer.parseInt(text.toString());
+                }
+                catch (Exception ex) {
+
+                }
+                if (number<=0) {
+                    txtFieldCategoryPriority.setError(getString(R.string.category_priority_required));
+                    txtFieldCategoryPriority.setErrorEnabled(true);
+                } else {
+                    txtFieldCategoryPriority.setErrorEnabled(false);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        txtFieldCategoryDescription.getEditText().addTextChangedListener(new TextWatcher() {
+            // ...
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                if (text.length() >= 0 && text.length() <= 2) {
+                    txtFieldCategoryDescription.setError(getString(R.string.category_description_required));
+                    txtFieldCategoryDescription.setErrorEnabled(true);
+                } else {
+                    txtFieldCategoryDescription.setErrorEnabled(false);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void handleCreateCategoryClick(View view) {
         if(!validation()) {
+            Toast.makeText(this, "Заповніть усі поля!", Toast.LENGTH_LONG).show();
             return;
         }
         CategoryCreateDTO model = new CategoryCreateDTO();
@@ -66,6 +156,7 @@ public class CategoryCreateActivity extends BaseActivity {
         model.setPriority(number);
         model.setDescription(txtCategoryDescription.getText().toString());
         model.setImageBase64(uriGetBase64(uri));
+        CommonUtils.showLoading();
         CategoryNetwork
                 .getInstance()
                 .getJsonApi()
@@ -76,41 +167,50 @@ public class CategoryCreateActivity extends BaseActivity {
                         Intent intent = new Intent(CategoryCreateActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
+                        CommonUtils.hideLoading();
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-
+                        CommonUtils.hideLoading();
                     }
                 });
     }
 
-    private void addEventChangeInput(TextInputEditText input) {
-        input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                validation();
-            }
-        });
-    }
     private boolean validation() {
         boolean isValid=true;
-        if(txtCategoryName.getText().toString().isEmpty()) {
-            txtFieldCategoryName.setError("Вкажіть назву");
+        String name = txtCategoryName.getText().toString();
+        if(name.isEmpty() || name.length()<=2) {
+            txtFieldCategoryName.setError(getString(R.string.category_name_required));
+            isValid=false;
+        }
+        String priority = txtCategoryPriority.getText().toString();
+        int number=0;
+        try {
+            number = Integer.parseInt(priority.toString());
+        }
+        catch (Exception ex) {
+
+        }
+        if (number<=0) {
+            txtFieldCategoryPriority.setError(getString(R.string.category_priority_required));
+            txtFieldCategoryPriority.setErrorEnabled(true);
+            isValid=false;
+        }
+        String description = txtCategoryDescription.getText().toString();
+        if(description.isEmpty() || description.length()<=2) {
+            txtFieldCategoryDescription.setError(getString(R.string.category_description_required));
+            txtFieldCategoryDescription.setErrorEnabled(true);
+            isValid=false;
+        }
+
+        if(uri==null) {
+            textImageError.setVisibility(View.VISIBLE);
             isValid=false;
         }
         else {
-            txtFieldCategoryName.setError("");
+            textImageError.setVisibility(View.INVISIBLE);
         }
         return isValid;
     }
@@ -142,6 +242,7 @@ public class CategoryCreateActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==SELECT_CROPPER) {
             uri = (Uri) data.getParcelableExtra("croppedUri");
+            textImageError.setVisibility(View.INVISIBLE);
             IVPreviewImage.setImageURI(uri);
         }
     }
