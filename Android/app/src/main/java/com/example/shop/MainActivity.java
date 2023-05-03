@@ -1,12 +1,12 @@
 package com.example.shop;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity {
         rcvCategories.setHasFixedSize(true);
         rcvCategories.setLayoutManager(new GridLayoutManager(this, 2,
                 LinearLayoutManager.VERTICAL, false));
-        rcvCategories.setAdapter(new CategoriesAdapter(new ArrayList<>()));
+        rcvCategories.setAdapter(new CategoriesAdapter(new ArrayList<>(), MainActivity.this::onClickEditCategory));
         requestServer();
     }
 
@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
                     public void onResponse(Call<List<CategoryItemDTO>> call, Response<List<CategoryItemDTO>> response) {
                         List<CategoryItemDTO> data = response.body();
                         if(response.isSuccessful() && data!=null) {
-                            categoriesAdapter = new CategoriesAdapter(data);
+                            categoriesAdapter = new CategoriesAdapter(data, MainActivity.this::onClickEditCategory);
                             rcvCategories.setAdapter(categoriesAdapter);
                         }
                         CommonUtils.hideLoading();
@@ -69,5 +69,9 @@ public class MainActivity extends BaseActivity {
                         CommonUtils.hideLoading();
                     }
                 });
+    }
+
+    private void onClickEditCategory(CategoryItemDTO category) {
+        Toast.makeText(this, "Редагуємо категорію "+category.getId(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -47,6 +47,13 @@
                 android:text="Назва категорії"
                 android:textSize="18dp"
                 />
+
+            <Button
+                android:id="@+id/btnCategoryEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Редагувать" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
