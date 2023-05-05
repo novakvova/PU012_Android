@@ -1,7 +1,5 @@
 package com.example.shop.category;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,7 +18,7 @@ import com.example.shop.ChangeImageActivity;
 import com.example.shop.MainActivity;
 import com.example.shop.R;
 import com.example.shop.dto.category.CategoryCreateDTO;
-import com.example.shop.service.CategoryNetwork;
+import com.example.shop.service.ApplicationNetwork;
 import com.example.shop.utils.CommonUtils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -157,9 +155,9 @@ public class CategoryCreateActivity extends BaseActivity {
         model.setDescription(txtCategoryDescription.getText().toString());
         model.setImageBase64(uriGetBase64(uri));
         CommonUtils.showLoading();
-        CategoryNetwork
+        ApplicationNetwork
                 .getInstance()
-                .getJsonApi()
+                .getCategoriesApi()
                 .create(model)
                 .enqueue(new Callback<Void>() {
                     @Override
