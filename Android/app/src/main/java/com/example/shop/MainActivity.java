@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.shop.category.CategoriesAdapter;
+import com.example.shop.category.CategoryEditActivity;
 import com.example.shop.contants.Urls;
 import com.example.shop.dto.category.CategoryItemDTO;
 import com.example.shop.service.ApplicationNetwork;
@@ -72,6 +74,11 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onClickEditCategory(CategoryItemDTO category) {
-        Toast.makeText(this, "Редагуємо категорію "+category.getId(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, CategoryEditActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("id", category.getId());
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+        //Toast.makeText(this, "Редагуємо категорію "+category.getId(), Toast.LENGTH_SHORT).show();
     }
 }

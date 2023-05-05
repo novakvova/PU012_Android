@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 import com.example.shop.dto.category.CategoryCreateDTO;
 import com.example.shop.dto.category.CategoryItemDTO;
@@ -13,6 +14,9 @@ import java.util.List;
 public interface CategoriesApi {
     @GET("/api/categories/list")
     public Call<List<CategoryItemDTO>> list();
+
+    @GET("/api/categories/{id}")
+    public Call<CategoryItemDTO> getById(@Path("id") int id);
     @POST("/api/categories/create")
     public Call<Void> create(@Body CategoryCreateDTO categoryCreateDTO);
 }
