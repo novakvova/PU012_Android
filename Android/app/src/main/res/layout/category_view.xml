@@ -52,6 +52,9 @@
                 android:id="@+id/btnCategoryEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:icon="@drawable/baseline_edit_24"
+                android:textSize="10dp"
+                style="?attr/materialButtonOutlinedStyle"
                 android:text="Редагувать" />
 
         </LinearLayout>

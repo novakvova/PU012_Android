@@ -4,10 +4,12 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 import com.example.shop.dto.category.CategoryCreateDTO;
 import com.example.shop.dto.category.CategoryItemDTO;
+import com.example.shop.dto.category.CategoryUpdateDTO;
 
 import java.util.List;
 
@@ -19,4 +21,7 @@ public interface CategoriesApi {
     public Call<CategoryItemDTO> getById(@Path("id") int id);
     @POST("/api/categories/create")
     public Call<Void> create(@Body CategoryCreateDTO categoryCreateDTO);
+
+    @PUT("/api/categories/update")
+    public Call<Void> update(@Body CategoryUpdateDTO category);
 }
