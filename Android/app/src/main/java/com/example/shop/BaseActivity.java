@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.shop.account.LoginActivity;
 import com.example.shop.account.RegisterActivity;
 import com.example.shop.category.CategoryCreateActivity;
 import com.example.shop.utils.CommonUtils;
@@ -55,6 +56,16 @@ public class BaseActivity extends AppCompatActivity {
                     finish();
                 }
                 catch(Exception ex) {
+                    System.out.println("---Problem "+ ex.getMessage());
+                }
+                return true;
+
+            case R.id.m_login:
+                try {
+                    intent=new Intent(BaseActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } catch(Exception ex) {
                     System.out.println("---Problem "+ ex.getMessage());
                 }
                 return true;
